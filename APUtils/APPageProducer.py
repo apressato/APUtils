@@ -19,19 +19,24 @@
 
 import re
 
-class APPageProducer (object):
+
+class APPageProducer(object):
     _Source = ''
     _Response = ''
+    _PageTemplate = ''
     _SearchPattrern = '<\s*#[^>]*\s*(\w\d\=)*>'
     _ExtractNamePattern = '\w[^><#]*'
+
     def get_CleanedTag(self, aTag):
         return re.search(self._ExtractNamePattern, aTag.replace('\n', ' ')).group()
+
     def __init__(self):
         pass
+
     def Internal_Parser(self):
         AttributeDict = {}
         _ReplaceTxt = ''
-        for x in re.finditer(self._SearchPattrern, self._Source, re.I|re.M):
+        for x in re.finditer(self._SearchPattrern, self._Source, re.I | re.M):
             TagInfoStr = x.group(0)
             TagInfoStrCln = self.get_CleanedTag(x.group(0))
             TagInfoList = TagInfoStrCln.split(' ')
@@ -45,27 +50,46 @@ class APPageProducer (object):
 
             if _ReplaceTxt != None:
                 self._Response = self._Response.replace(TagInfoStr, _ReplaceTxt)
+
     def rebuildAttributes(self, TagAttributes):
         sResult = ''
         for Tag in TagAttributes:
             sResult = sResult + " " + "{0}={1}".format(Tag, TagAttributes[Tag])
         return sResult.strip()
+
     def rebuildTag(self, TagString, TagAttributes):
         if TagAttributes != None:
             sResult = "<#{0} {1}>".format(TagString, self.rebuildAttributes(TagAttributes))
         else:
             sResult = "<#{0}>".format(TagString)
         return sResult
-    def response(self, aText):
-        self._Source = aText
-        self._Response = aText
+
+    def response(self, aText=None):
+        MyText = ''
+        if aText != None:
+            MyText = aText
+        else:
+            if len(self._PageTemplate) != 0:
+                MyText = self._PageTemplate
+            else:
+                raise ValueError('You Must specify a Page Template Content or load it from file.')
+        self._Source = MyText
+        self._Response = MyText
         self.Internal_Parser()
         return self._Response
+
     def PageProducerTag(self, TagString, TagAttributes):
         pass
 
+    def LoadFromFile(self, aFileName):
+        with open(aFileName, "r+") as TemplateObj:
+            self._PageTemplate = TemplateObj.read()
 
-class TestClass (APPageProducer):
+    def clear(self):
+        self._PageTemplate = ''
+
+
+class TestClass(APPageProducer):
     def PageProducerTag(self, TagString, TagAttributes):
         sResult = None
         print(TagString)
@@ -74,6 +98,7 @@ class TestClass (APPageProducer):
         if TagString == 'appname':
             sResult = 'APressato Page Producer Class'
         return sResult
+
 
 if __name__ == '__main__':
     TestStr = '''<html>
@@ -93,3 +118,5 @@ days=21 type=3></b>.</p>
 
     MyClass = TestClass()
     print(MyClass.response(TestStr))
+    #MyClass.LoadFromFile('./template.txt')
+    #print(MyClass.response())
