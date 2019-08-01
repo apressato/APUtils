@@ -89,18 +89,19 @@ class APPageProducer(object):
         self._PageTemplate = ''
 
 
-class TestClass(APPageProducer):
-    def PageProducerTag(self, TagString, TagAttributes):
-        sResult = None
-        print(TagString)
-        if TagAttributes != None:
-            print(TagAttributes)
-        if TagString == 'appname':
-            sResult = 'APressato Page Producer Class'
-        return sResult
-
-
 if __name__ == '__main__':
+
+    class TestClass(APPageProducer):
+        def PageProducerTag(self, TagString, TagAttributes):
+            sResult = None
+            print(TagString)
+            if TagAttributes != None:
+                print(TagAttributes)
+            if TagString == 'appname':
+                sResult = 'APressato Page Producer Class'
+            return sResult
+
+
     TestStr = '''<html>
 <head>
 <title>Producer Demo</title>
@@ -118,5 +119,5 @@ days=21 type=3></b>.</p>
 
     MyClass = TestClass()
     print(MyClass.response(TestStr))
-    #MyClass.LoadFromFile('./template.txt')
-    #print(MyClass.response())
+    # MyClass.LoadFromFile('./template.txt')
+    # print(MyClass.response())
