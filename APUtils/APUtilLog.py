@@ -32,21 +32,27 @@ import exceptions
 KLogDir = os.path.join(".", "logs", "")
 KLogFile = KLogDir + datetime.datetime.now().strftime("%Y%m") + '.Log'
 
-KLogParams = {'File' : {'Active' : False, 'LogFile': KLogFile, 'WriteMode': ''}, 'Console' : {'Active' : True}, 'Mail' : {'Active' : False, 'Host' : '', 'Port' : 25, 'From': '', 'To' : '', 'Subject' : '', 'User' : '', 'Password' : ''}}
+KLogParams = {'LogLevel' : logging.DEBUG, 'File' : {'Active' : False, 'LogFile': KLogFile, 'WriteMode': '', 'Rotating' : {'BackupCnt': 2, 'Max': 0} }, 'Console' : {'Active' : True}, 'Mail' : {'Active' : False, 'Host' : '', 'Port' : 25, 'From': '', 'To' : '', 'Subject' : '', 'User' : '', 'Password' : ''}}
 
 def SettingLogs(aLogger, aLogParams = KLogParams):
-  aLogger.setLevel(logging.DEBUG)
+  aLogger.setLevel(aLogParams['LogLevel'])
   # create formatter and add it to the handlers
   formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s', datefmt='%Y%m%d %H:%M:%S')
 
   if aLogParams['File']['Active']:
      # create file handler which logs even debug messages
      #print aLogParams['File']['LogFile']
-     if aLogParams['File']['WriteMode'] == '':
-        fh = logging.FileHandler(aLogParams['File']['LogFile'])
+     if (aLogParams['File']['Rotating']['Max'] == 0):
+         if aLogParams['File']['WriteMode'] == '':
+            fh = logging.FileHandler(aLogParams['File']['LogFile'])
+         else:
+            fh = logging.FileHandler(aLogParams['File']['LogFile'], mode=aLogParams['File']['WriteMode'])
      else:
-        fh = logging.FileHandler(aLogParams['File']['LogFile'], mode=aLogParams['File']['WriteMode'])
-     fh.setLevel(logging.DEBUG)
+         if aLogParams['File']['WriteMode'] == '':
+            fh = logging.RotatingFileHandler(aLogParams['File']['LogFile'], maxBytes=aLogParams['File']['Rotating']['Max'], backupCount=aLogParams['File']['Rotating']['BackupCnt'], delay=0)
+         else:
+            fh = logging.RotatingFileHandler(aLogParams['File']['LogFile'], mode=aLogParams['File']['WriteMode'], maxBytes=aLogParams['File']['Rotating']['Max'], backupCount=aLogParams['File']['Rotating']['BackupCnt'], delay=0)
+     fh.setLevel(aLogParams['LogLevel'])
      fh.setFormatter(formatter)
      # add the handlers to the logger
      aLogger.addHandler(fh)
