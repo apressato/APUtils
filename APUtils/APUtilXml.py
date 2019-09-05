@@ -39,13 +39,13 @@ KEscapeSeqHTML = [('&', '&amp;'),
 				  
 				  
 KEscapeSeqXML = [('&', '&amp;'),
-                  ('<', '&lt;'),
-                  ('>', '&gt;'),
-                  ('"', '&quot;'),
-                  ('\'', '&apos;')]
+                 ('<', '&lt;'),
+                 ('>', '&gt;'),
+                 ('"', '&quot;'),
+                 ('\'', '&apos;')]
 			  
 def GetEscapedText(aText, aEscapeType = KXMLType):
-"""Escapes invalid XML characters."""
+    """Escapes invalid XML characters."""
     EscapeSeq = []
     if aEscapeType == KHTMLType:
        EscapeSeq = KEscapeSeqHTML

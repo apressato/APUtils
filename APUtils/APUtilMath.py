@@ -20,6 +20,6 @@
 from __future__ import division
 
 def GetPercentual(aTot, aPart, aPrecision = 2):
-"""Returns the percentage of progress."""
+    """Returns the percentage of progress."""
     x = round(((aPart / aTot) * 100), aPrecision)
     return x

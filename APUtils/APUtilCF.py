@@ -24,13 +24,14 @@ import datetime
 array_Dispari = [1, 0, 5, 7, 9, 13, 15, 17, 19, 21, 2, 4, 18, 20, 11, 3, 6, 8, 12, 14, 16, 10, 22, 25, 24, 23]
 Mesi           = "ABCDEHLMPRST"
 
-class CodiceFiscale:
+class CodiceFiscale(object):
+  _Nome            = ''
+  _Cognome         = ''
+  _Sesso           = ''
+  _DataNascita     = None
+  _BelfioreNascita = ''
   def __init__(self):
-      self.Nome = ''
-      self.Cognome = ''
-      self.Sesso = ''
-      self.DataNascita = datetime.datetime.strftime(datetime.datetime.now(), '%d/%m/%Y')
-      self.BelfioreNascita = ''
+      pass
   def __normalizza(self, aStr):
       sResult = ''
       for ch in aStr.lower():
@@ -133,7 +134,7 @@ class CodiceFiscale:
       SommaPari    = sum(self.__Cod_Pari(x) for x in aCF[1::2])
       return chr(ord('A') + ((SommaDispari + SommaPari) % 26))
   def get_codice_fiscale(self):
-      cfBase = "{}{}{}{}".format(self.__getcogn3char(self.Cognome), self.__getnome3char(self.Nome), self.__DataNa2DataCF(self.DataNascita, self.Sesso), self.BelfioreNascita) 
+      cfBase = "{}{}{}{}".format(self.__getcogn3char(self._Cognome), self.__getnome3char(self._Nome), self.__DataNa2DataCF(self._DataNascita, self._Sesso), self._BelfioreNascita)
       return "".join([cfBase, self.__get_CodiceControllo(cfBase)])
   def check_CodiceControllo(self, aCF):
       internalCF = aCF.upper()
@@ -141,6 +142,37 @@ class CodiceFiscale:
   def Calcola_Compara(self, aCFToCompare):
       internalCF = self.get_codice_fiscale()
       return internalCF == aCFToCompare
+  @property
+  def Nome(self):
+      return self._Nome
+  @Nome.setter
+  def Nome(self, Value):
+      self._Nome = Value
+  @property
+  def Cognome(self):
+      return self._Cognome
+  @Cognome.setter
+  def Cognome(self, Value):
+      self._Cognome = Value
+  @property
+  def Sesso(self):
+      return self._Sesso
+  @Sesso.setter
+  def Sesso(self, Value):
+      self._Sesso = Value
+  @property
+  def DataNascita(self):
+      return self._DataNascita
+  @DataNascita.setter
+  def DataNascita(self, Value):
+      self._DataNascita = Value
+  @property
+  def BelfioreNascita(self):
+      return self._BelfioreNascita
+  @BelfioreNascita.setter
+  def BelfioreNascita(self, Value):
+      self._BelfioreNascita = Value
+
 
 if __name__ == "__main__":
    CalcCF = CodiceFiscale()

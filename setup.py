@@ -26,6 +26,7 @@ setuptools.setup(
         #   5 - Production/Stable
         "Development Status :: 3 - Alpha",        
         "Programming Language :: Python :: 2",
+        "Programming Language :: Python :: 3",
         "License :: Creative Commons Attribution ShareAlike 4.0 International",
         "Operating System :: OS Independent",
      ],
