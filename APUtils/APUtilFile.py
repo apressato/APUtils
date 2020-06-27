@@ -22,6 +22,7 @@
 import os
 import sys
 import shutil
+from pathlib import Path
 # Date e Tempo
 import datetime
 from datetime import date, timedelta
@@ -39,6 +40,9 @@ def ForceDir(aDirPathName):
     if (not os.path.isdir(aDirPathName)):
         os.makedirs(aDirPathName)
 
+def ForceDirSafe(aDirPathName):
+   p = Path(aDirPathName)
+   p.mkdir(exists_ok=True, parents=True)
 
 def GetFileHash(aFileName, blocksize=65536):
     afile = open(aFileName, 'rb')

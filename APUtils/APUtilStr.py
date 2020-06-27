@@ -21,9 +21,12 @@ import ast
 
 
 def StringToStructure(aStr):
-"""Transform a string into a python structure.
-   Example:
-   "{test: 1}" -> {test: 1}
-"""
+    """Transform a string into a python structure.
+       Example:
+       "{test: 1}" -> {test: 1}
+    """
     return ast.literal_eval(aStr)
-	
+
+
+if __name__ == "__main__":
+    print(StringToStructure('{"Nikhil" : 1, "Akshat" : 2, "Akash" : 3}'))
