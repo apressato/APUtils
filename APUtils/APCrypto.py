@@ -47,43 +47,43 @@ class APCryptoSuite(object):
         return Result
 
     def _EncodeMime(self, St):
+        Result = ""
         if self.GetPythonVer() == 3:
-            Result = St  # str(base64.b64encode(St.encode('ISO-8859-1')))
+            Result = base64.b64encode(St.encode('utf-8'))
         elif self.GetPythonVer() < 3:
             Result = base64.b64encode(St)
         return Result
 
     def _DecodeMime(self, St):
+        Result = ""
         if self.GetPythonVer() == 3:
-            Result = St  # str(base64.b64decode(St.encode('ISO-8859-1')))
+            Result = base64.b64decode(St).decode('utf-8')
         elif self.GetPythonVer() < 3:
             Result = base64.b64decode(St)
         return Result
 
     def _OffSetStrFromPhrase(self, St):
-        Sl = St.split()
-        for I in range(len(Sl)):
-            self.FOffSet.append(ord(Sl[I][0]))
+        self._FOffSet = []
+        for token in St.split():
+            self._FOffSet.append(ord(token[0]))
 
     def _PrepareOffSet(self):
-        if self.RandomPhrase == '':
-            for I in range(len(self.KOffSetArray)):
-                FOffSet.append(self.KOffArray[I])
+        if self.RandomPhrase is None:
+            self._FOffSet = self._KOffSetArray
         else:
             self._OffSetStrFromPhrase(self.RandomPhrase)
 
     def __init__(self):
-        pass
         self._KOffSetArray = [7, 4, 5, 6]
 
     def Encrypt(self, St):
         self._PrepareOffSet()
-        Result = self._EncodeMime(self._Crypt(St, self.FOffSet))
+        Result = self._EncodeMime(self._Crypt(St, self._FOffSet)).decode('utf-8')
         return Result
 
     def Decrypt(self, St):
         self._PrepareOffSet()
-        Result = self._Decrypt(self._DecodeMime(St), self.FOffSet)
+        Result = self._Decrypt(self._DecodeMime(St), self._FOffSet)
         return Result
 
     def GetOverflowed(self, aValue):
@@ -118,3 +118,12 @@ def APDecryptPassword(aRandomPhrase, aPassword):
     MyAPCryptoSuite.RandomPhrase = aRandomPhrase
     Result = MyAPCryptoSuite.Decrypt(aPassword)
     return Result
+
+
+if __name__ == '__main__':
+    SecretPhrase = "Python Is Awesome !!!"
+    # SecretPhrase = None
+    enc_result = APEncryptPassword(SecretPhrase, 'P4ssw0rd')
+    print(enc_result)
+    dec_result = APDecryptPassword(SecretPhrase, enc_result)
+    print(dec_result)
