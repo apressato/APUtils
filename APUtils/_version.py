@@ -18,4 +18,4 @@
 #   see <https://creativecommons.org/licenses/by-sa/4.0/legalcode>.
 
 # Master version for APUtils
-__version__="0.1.9"
+__version__="1.2.5"
